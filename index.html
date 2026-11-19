@@ -23,6 +23,7 @@
   --good:#4cc79a; --good-soft:#123227; --warn:#f0b35a; --warn-soft:#3a2a12;
   --bad:#ff8a80; --bad-soft:#3d1a18; --new:#b89cff; --new-soft:#2a2045; --shadow:none; color-scheme:dark}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 header{background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
 .wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -76,6 +77,40 @@ label.tog{display:flex;gap:8px;align-items:center;font-size:14px;margin:6px 0;cu
 .actions a.apply{background:var(--accent);color:var(--accent-ink);text-align:center;padding:8px 12px;border-radius:9px;text-decoration:none;font-weight:600;font-size:14px}
 .actions button{font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
 .empty{text-align:center;padding:50px 20px;color:var(--muted)}
+.wfh{color:var(--good)}
+.pcols{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding-block:20px 60px}
+.pcol{display:flex;flex-direction:column;gap:14px;min-width:0}
+.colhead{display:flex;flex-direction:column;gap:4px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+.colhead h2{margin:0;font-size:17px}
+.post{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;padding:10px 0;border-top:1px solid var(--line)}
+.post:first-child{border-top:0}
+.post>div{min-width:0}
+.post a{color:var(--ink);font-weight:600;text-decoration:none} .post a:hover{color:var(--accent);text-decoration:underline}
+.kind{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap;height:max-content}
+.k-experience{background:var(--new-soft);color:var(--new)} .k-questions{background:var(--good-soft);color:var(--good)}
+.k-expert{background:var(--warn-soft);color:var(--warn)} .k-practice{background:var(--accent-soft);color:var(--accent)}
+.pmeta{font-size:12.5px;color:var(--muted)}
+.psum{font-size:13px;color:var(--ink);margin-top:2px}
+.more2{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;width:max-content}
+.links{display:flex;flex-wrap:wrap;gap:6px}
+.links a{font-size:13px;color:var(--accent);text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:4px 8px}
+.nform{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.nform input,.nform select,.nform textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px}
+.nform textarea{grid-column:1/-1;min-height:70px;resize:vertical}
+.pbtn{padding:8px 12px;border:0;border-radius:8px;background:var(--accent);color:var(--accent-ink);font-weight:600;cursor:pointer;width:max-content}
+.mynote{border-left:3px solid var(--new);padding:4px 0 4px 10px;display:flex;flex-direction:column;gap:2px}
+.mynote button{border:0;background:none;color:var(--muted);cursor:pointer;font-size:12px;padding:0;width:max-content}
+details.track{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+details.track summary{cursor:pointer;font-weight:700;font-size:15px;display:flex;justify-content:space-between;gap:10px;list-style:none}
+details.track summary::-webkit-details-marker{display:none}
+details.track summary .lv{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--good-soft);color:var(--good);white-space:nowrap;height:max-content}
+details.track[open] summary{margin-bottom:8px}
+.track .lbl{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:10px 0 4px}
+.track ul,.track ol{margin:0;padding-left:20px} .track li{margin:3px 0}
+.qa{background:var(--bg);border-radius:8px;padding:10px 12px;font-size:14px;margin-top:6px}
+.qa b{display:block;margin-bottom:4px}
+pre.code{margin:6px 0 0;background:var(--bg);border-radius:8px;padding:10px 12px;font:12.5px/1.5 ui-monospace,Consolas,monospace;overflow-x:auto}
+@media (max-width:860px){.pcols{grid-template-columns:1fr}.nform{grid-template-columns:1fr}}
 .health{font-size:13px}
 .health div.r{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px dashed var(--line)}
 .ok{color:var(--good)} .blk{color:var(--bad)}
@@ -149,6 +184,8 @@ table.ex{border-collapse:collapse;font-size:13px;width:100%} table.ex td{padding
       <label class="tog"><input type="checkbox" id="onlyApplied"> Only jobs I applied to</label>
       <label class="tog"><input type="checkbox" id="hideClosed" checked> Hide jobs that may be closed</label>
     </div>
+    <div class="box"><h3>Work mode<button class="q" data-k="Work mode">?</button></h3><div class="chips" id="modes"></div>
+      <div class="note">Read from the job text. "Not stated" = the job doesn't say; many on-site jobs don't.</div></div>
     <div class="box"><h3>Skills / area<button class="q" data-k="Skills / area">?</button></h3><div class="chips" id="skills"></div></div>
     <div class="box"><h3>Level<button class="q" data-k="Level">?</button></h3><div class="chips" id="levels"></div>
       <div class="note">From the title (L1/L2/L3, Senior, Junior) or years asked for. Many jobs don't say.</div></div>
@@ -164,29 +201,159 @@ table.ex{border-collapse:collapse;font-size:13px;width:100%} table.ex td{padding
   </main>
 </div>
 
-<div class="wrap page" id="v-prep" hidden>
-  <h2>Interview prep</h2>
-  <p class="sub">Your two study documents from the web chat. They open in Claude (sign in with your account).</p>
-  <div class="prep">
-    <a class="box" href="https://claude.ai/artifact/EV3XkcoJTrr48e3DAKD32V" target="_blank" rel="noopener"><b>Microsoft Sentinel SOC Interview Playbook</b><span class="sub">KQL, analytics rules, incidents, playbooks: how SOC interviewers test Sentinel.</span></a>
-    <a class="box" href="https://claude.ai/artifact/WG8WmkN48aeAGXYbAXTxAF" target="_blank" rel="noopener"><b>Threat Hunting Interview Question Bank</b><span class="sub">Real questions from the field, with what a good answer covers.</span></a>
-  </div>
-  <div class="box">
-    <h3>Before each interview: 5-minute checklist</h3>
-    <ol>
-      <li>Open the job on this page and read its <b>tags</b>: those are the tools they will ask about.</li>
-      <li>Prepare one real story per tag: what happened, what you did, what changed (numbers if you have them).</li>
-      <li>For SOC roles, be ready to walk through one alert end to end: triage, scope, contain, document.</li>
-      <li>For Sentinel roles, write one KQL query from memory (failed sign-ins by user, last 24h).</li>
-      <li>Mark the job "I applied" here so the tracker stays right.</li>
-    </ol>
-  </div>
+<div class="wrap pcols" id="v-prep" hidden>
+  <!-- LEFT: what real people who interviewed say -->
+  <section class="pcol">
+    <div class="colhead"><h2>From people who interviewed<button class="q" data-k="Interview experiences">?</button></h2>
+      <p class="sub" id="prep-sub">Real experiences, question lists and practice write-ups. Click to read on the original site.</p></div>
+    <div class="box">
+      <div class="chips" id="pkinds"></div>
+      <div class="chips" id="ptopics" style="margin-top:8px"></div>
+      <div id="posts" style="margin-top:6px"></div>
+      <button class="more2" id="pmore" hidden>Show more</button>
+    </div>
+    <div class="box">
+      <h3>Search more real experiences<button class="q" data-k="Interview experiences">?</button></h3>
+      <p class="note" style="margin-top:0">These sites block automatic reading, so they open as a search in your own browser (sign in to LinkedIn and Glassdoor to see everything).</p>
+      <div id="searchmore" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+    <div class="box">
+      <h3>Company reviews for jobs you applied to</h3>
+      <div id="colinks" class="note" style="margin-top:0"></div>
+    </div>
+    <div class="box">
+      <h3>My interview notes</h3>
+      <p class="note" style="margin-top:0">After each interview, write what they asked and what to fix next time. Saved only in this browser; never published.</p>
+      <form class="nform" id="nform">
+        <input id="n-co" placeholder="Company" aria-label="Company" required><input id="n-role" placeholder="Role" aria-label="Role">
+        <input id="n-date" type="date" aria-label="Date"><select id="n-round" aria-label="Round"><option>HR screen</option><option>Technical 1</option><option>Technical 2</option><option>Manager</option><option>Offer / reject</option></select>
+        <textarea id="n-text" placeholder="Questions asked, what went well, what to fix next time" aria-label="Notes" required></textarea>
+        <button class="pbtn" type="submit">Save note</button>
+      </form>
+      <div id="notes" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+  </section>
+
+  <!-- RIGHT: expert guide -->
+  <section class="pcol">
+    <div class="colhead"><h2>Expert guide<button class="q" data-k="Expert advice">?</button></h2>
+      <p class="sub">How to present yourself, how to think through tricky questions, and what each tool's interview tests.</p></div>
+    <div class="box">
+      <h3>Your study documents</h3>
+      <div class="links"><a href="https://claude.ai/artifact/EV3XkcoJTrr48e3DAKD32V" target="_blank" rel="noopener">Microsoft Sentinel SOC Interview Playbook</a>
+        <a href="https://claude.ai/artifact/WG8WmkN48aeAGXYbAXTxAF" target="_blank" rel="noopener">Threat Hunting Interview Question Bank</a></div>
+      <p class="note">Open in Claude; only you can see them.</p>
+    </div>
+
+    <details class="track" open>
+      <summary>1. Present yourself in 60 seconds <span class="lv">Every interview</span></summary>
+      <p>"Tell me about yourself" is your first impression. Use four parts, about 15 seconds each:</p>
+      <ol><li><b>Who you are:</b> role and years. "I'm a SOC analyst with 2 years in a 24x7 SOC."</li>
+        <li><b>Your tools:</b> only the ones in their job. "I work daily in Microsoft Sentinel and Defender for Endpoint, and write KQL."</li>
+        <li><b>One proof with a number:</b> "I tuned 12 noisy rules and cut false positives by about 40%."</li>
+        <li><b>Why them:</b> "I want to move into threat hunting, and your team runs hunts weekly."</li></ol>
+      <span class="lbl">Avoid</span>
+      <ul><li>Reading your CV aloud, or listing every tool you have ever touched.</li><li>Saying "I'm passionate about security" without a story that shows it.</li></ul>
+    </details>
+
+    <details class="track" open>
+      <summary>2. How to answer tricky "what would you do if..." questions <span class="lv">L1 to L3</span></summary>
+      <p>Interviewers care more about <b>how you think</b> than the final answer. Say your steps out loud in this order:</p>
+      <ol><li><b>Clarify:</b> ask one or two questions. "Is this a server or a laptop? Is the user an admin?"</li>
+        <li><b>Scope:</b> how many users or machines, and how bad (data, money, downtime).</li>
+        <li><b>Evidence:</b> name the exact logs you would open (sign-in logs, EDR process tree, proxy, email logs).</li>
+        <li><b>Contain:</b> the smallest action that stops the harm: disable the account, isolate the host, block the hash.</li>
+        <li><b>Fix and recover:</b> remove the cause, reset credentials, restore.</li>
+        <li><b>Tell and write:</b> who you inform (L2, manager, IT) and what goes in the ticket.</li></ol>
+      <div class="qa"><b>"The same user logs in from Dubai and Mumbai 10 minutes apart."</b>Impossible travel. Check whether one IP is a VPN or cloud proxy, whether MFA passed, and whether the device is known. If the login looks real and unknown: revoke the sessions, reset the password, check the mailbox for new forwarding rules, and look for other users signing in from that IP.</div>
+      <div class="qa"><b>"An alert fired 500 times overnight. What do you do?"</b>Don't close 500 tickets one by one. Group by host, user and rule to find the single cause. Check one sample properly: if it's a true positive, treat it as one incident; if it's noise, tune the rule (exclusion or threshold) and record why.</div>
+      <div class="qa"><b>"The CEO's laptop is flagged and his assistant says ignore it."</b>Be polite but follow the process: no one is exempt. Escalate to your lead, investigate quickly and quietly, and explain the risk in business words. VIPs are the most targeted users.</div>
+      <div class="qa"><b>"You don't know the answer."</b>Say so, then say how you'd find it: "I haven't used QRadar's AQL, but in Sentinel I'd do it like this, and I'd check the AQL guide." Honesty plus a method scores better than guessing.</div>
+    </details>
+
+    <details class="track">
+      <summary>3. SOC analyst <span class="lv">L1 / L2</span></summary>
+      <span class="lbl">What they test</span>
+      <ul><li>Triage: true or false positive, how bad, who to tell.</li><li>Basics: TCP/UDP, common ports, DNS, Windows event IDs 4624 (logon), 4625 (failed logon), 4688 (process created), 4720 (user created).</li><li>Clear incident write-ups.</li></ul>
+      <div class="qa"><b>"Walk me through a phishing alert."</b>Check the sender, headers and links in a sandbox; find everyone who received it (mail logs); find who clicked (proxy logs); block the sender, URL and attachment hash; reset passwords for anyone who typed credentials; write the timeline in the ticket.</div>
+      <div class="qa"><b>"SIEM vs EDR?"</b>A SIEM collects logs from everything and connects the dots (the building's CCTV room). EDR watches and can act on one computer's processes (a guard at one door). Good SOCs use both.</div>
+      <div class="qa"><b>"True positive vs false positive?"</b>A true positive is a real attack that the alert caught. A false positive is an alert on normal activity. The dangerous one is a false negative: a real attack with no alert.</div>
+    </details>
+
+    <details class="track">
+      <summary>4. Microsoft Sentinel and KQL <span class="lv">L2</span></summary>
+      <div class="qa"><b>"Failed sign-ins per user in the last day."</b>
+<pre class="code">SigninLogs
+| where TimeGenerated &gt; ago(1d)
+| where ResultType != "0"
+| summarize Failures = count() by UserPrincipalName
+| order by Failures desc</pre></div>
+      <span class="lbl">Also asked</span>
+      <ul><li>Analytics rule vs hunting query: a rule runs on a schedule and creates incidents; a hunting query is run by you to look around.</li>
+        <li>Playbooks are Logic Apps that act on an incident: enrich an IP, disable a user, post to Teams.</li>
+        <li>Data connectors, Log Analytics workspace, and how you would cut ingestion cost.</li></ul>
+    </details>
+
+    <details class="track">
+      <summary>5. Splunk and QRadar <span class="lv">L1 / L2</span></summary>
+      <div class="qa"><b>Splunk: failed Windows logons by account</b>
+<pre class="code">index=wineventlog EventCode=4625
+| stats count by Account_Name, src_ip
+| sort - count</pre></div>
+      <div class="qa"><b>QRadar: failed logins by user (AQL)</b>
+<pre class="code">SELECT username, COUNT(*) AS failures
+FROM events
+WHERE QIDNAME(qid) ILIKE '%fail%'
+GROUP BY username
+ORDER BY failures DESC
+LAST 24 HOURS</pre></div>
+      <span class="lbl">Also asked</span>
+      <ul><li>QRadar: offense vs event, rules and building blocks, log sources and DSMs, what EPS (events per second) licensing means.</li>
+        <li>Splunk: indexes, sourcetypes, forwarders, and the difference between stats and table.</li></ul>
+    </details>
+
+    <details class="track">
+      <summary>6. EDR / XDR and CrowdStrike <span class="lv">L2</span></summary>
+      <ul><li><b>Process tree:</b> read the parent and child chain. "winword.exe spawning powershell.exe" is a classic bad sign.</li>
+        <li><b>IOC vs IOA:</b> an IOC is evidence left behind (hash, IP, domain); an IOA is suspicious behaviour while it happens (credential dumping). CrowdStrike Falcon leans on IOAs.</li>
+        <li><b>Containment:</b> network-isolate the host (it still talks to the EDR console), then use Real Time Response to collect files or kill processes.</li></ul>
+      <div class="qa"><b>"EDR blocked a file. Are you done?"</b>No. Find how it arrived (email, USB, download), whether it ran anywhere else, and whether anything persisted (scheduled tasks, run keys, new services).</div>
+    </details>
+
+    <details class="track">
+      <summary>7. SOAR and automation <span class="lv">L2 / L3</span></summary>
+      <ul><li>Automate the boring, repeatable steps: enrich IPs, hashes and domains, open tickets, notify, and block known-bad indicators.</li>
+        <li>Keep a human on risky actions (disabling an executive's account, isolating a production server).</li>
+        <li>Tools: Cortex XSOAR, Splunk SOAR (Phantom), Sentinel playbooks (Logic Apps), Shuffle. Python and PowerShell basics help a lot.</li></ul>
+      <div class="qa"><b>"Design a phishing playbook."</b>Trigger: user-reported email. Steps: extract URLs and attachments, check reputation and sandbox them, search for other recipients, auto-delete if malicious, block the sender, notify the user, and close with a summary. A human approves deletion when it affects more than 50 mailboxes.</div>
+    </details>
+
+    <details class="track">
+      <summary>8. Threat hunting <span class="lv">L2 / L3</span></summary>
+      <ul><li>Start from a hypothesis: "An attacker uses PsExec to move between servers."</li><li>Map it to MITRE ATT&amp;CK (T1021.002, SMB/Windows Admin Shares).</li><li>Query the data, separate normal admin use from the strange, and turn every good hunt into a detection rule.</li></ul>
+    </details>
+
+    <details class="track">
+      <summary>9. Incident response <span class="lv">L2 / L3</span></summary>
+      <ul><li>NIST phases: prepare, detect and analyse, contain, eradicate, recover, lessons learned.</li><li>Containment trade-off: pulling a server stops the attacker but also the business. Say who decides.</li><li>Evidence: collect memory before rebooting, keep a timeline, and hash what you collect.</li></ul>
+      <div class="qa"><b>"Ransomware note found on a file server at 2 am."</b>Isolate the server (and its backups) from the network, don't power it off, find patient zero from EDR and logins, check whether data left the network, wake the IR lead and follow the runbook, then restore from clean backups.</div>
+    </details>
+
+    <details class="track">
+      <summary>10. HR and manager round <span class="lv">All</span></summary>
+      <ul><li><b>Shifts:</b> most SOCs run 24x7. Say clearly whether you can do nights.</li>
+        <li><b>Notice period:</b> India often 30 to 90 days; UAE usually 30 days. Know yours.</li>
+        <li><b>Salary:</b> give a range based on research, not your current pay. UAE packages are usually quoted monthly; India packages are quoted yearly (CTC).</li>
+        <li><b>Visa (UAE):</b> say whether you need sponsorship or already hold a residence visa.</li>
+        <li><b>"Tell me about a mistake":</b> pick a real one, then what you changed so it can't happen again.</li></ul>
+    </details>
+  </section>
 </div>
 
 <div class="wrap page" id="v-how" hidden>
   <h2>How it works</h2>
   <div class="box"><ol>
-    <li>Every 6 hours your laptop runs <code>E:\JobSearch\run.cmd</code>. It searches LinkedIn for 12 cyber job titles in the UAE and India (jobs from the last 7 days).</li>
+    <li>Every 6 hours your laptop runs <code>E:\JobSearch\run.cmd</code>. It searches LinkedIn for 16 cyber job titles (incl. QRadar, CrowdStrike, SOAR, security administrator) in the UAE and India (jobs from the last 7 days).</li>
     <li>It opens each new job once to read the description, then works out the <b>level</b>, <b>years asked</b> and <b>skill tags</b>.</li>
     <li>It removes jobs that are not cybersecurity: chip design "SoC" jobs and security guard jobs (see the list in "Last update - sites").</li>
     <li>The same job found by several searches or sites is shown once.</li>
@@ -199,6 +366,7 @@ table.ex{border-collapse:collapse;font-size:13px;width:100%} table.ex td{padding
 <div id="pop" hidden role="dialog" aria-modal="false"><button class="x" aria-label="Close">&times;</button><div id="popbody"></div></div>
 
 <script src="jobs.js"></script>
+<script src="prep.js"></script>
 <script>
 (function(){
 var D = window.JOB_DATA || {jobs:[], runs:[], blocked_sites:{}, excluded:[]};
@@ -241,6 +409,22 @@ var TERMS = {
     ex:"'177 applicants' means a crowded job; 'under 25' is a quiet one.",
     how:"From the public LinkedIn page when the job was first read.",
     good:"Under 50: good odds. 50-200: normal. 200+: crowded, apply only if the match is high."},
+  "Work mode": {plain:"Where you would work: On-site = at the office every day. Hybrid = some days office, some days home. Remote = from home. WFH at start = the job says you work from home at the beginning (training, first weeks or months).",
+    ex:"'Hybrid work in Pune' shows as Hybrid. A description saying 'work from home for the first 3 months' shows the WFH at start badge with those words quoted.",
+    how:"Read from the location line and the job description. Many jobs never say; they show as Not stated (most of those are on-site). Older LinkedIn jobs are re-read 40 per run, so Not stated shrinks over the next days.",
+    good:"Remote and Hybrid jobs get many more applicants: apply early, within 3 days of posting."},
+  "WFH at start": {plain:"The job says you will work from home at the beginning, usually during training or the first months.",
+    ex:"'Initial 6 months work from home, then hybrid.'",
+    how:"The exact words from the job text are shown on the card. Always confirm with the recruiter; plans change.",
+    good:"-"},
+  "Interview experiences": {plain:"Real people describing their own interview: the rounds, the questions they were asked and how it ended.",
+    ex:"'My Interview Experience for VAPT at Delhivery' lists every round from the LinkedIn message to selection.",
+    how:"Collected every 6 hours from Medium's cyber feeds, plus a researched list of LinkedIn, Reddit, Glassdoor and YouTube links. Click to read on the original site.",
+    good:"Read 3-5 for the tools in the job you are interviewing for."},
+  "Expert advice": {plain:"Articles by practitioners on how to present yourself, think through a problem and answer tricky 'what would you do if' questions.",
+    ex:"A SOC lead explaining how to answer 'an alert fires 500 times overnight, what do you do?'.",
+    how:"Same sources as interview experiences, sorted by what the article teaches.",
+    good:"-"},
   "May be closed": {plain:"We haven't seen this job on its site for 14 days, so it is probably filled.",
     ex:"A job first found 1 Nov and last seen 4 Nov shows this badge on 18 Nov.",
     how:"After 30 days unseen it leaves the page.",
@@ -256,7 +440,13 @@ var prevVisit = store.get("lastVisit", null);
 var sinceForNew = prevVisit || new Date(Date.now()-6*3600e3).toISOString();
 store.set("lastVisit", new Date().toISOString());
 var me = Object.assign({skills:["SOC","SIEM","Sentinel","Incident Response","Threat Hunting"], levels:["L2"]}, store.get("me", {}));
-var st = Object.assign({region:"UAE", q:"", skills:[], levels:[], age:0, sources:[], sort:"match",
+var MODES = ["On-site","Hybrid","Remote","WFH at start","Not stated"];
+function modeOf(j, m){
+  if(m==="WFH at start") return !!j.wfh_start;
+  if(m==="Not stated") return !j.work_mode;
+  return j.work_mode===m;
+}
+var st = Object.assign({region:"UAE", q:"", skills:[], levels:[], modes:[], age:0, sources:[], sort:"match",
   onlyNew:false, hideDone:true, onlyApplied:false, hideClosed:true}, store.get("filters", {}));
 var shown = 50;
 var today = new Date();
@@ -295,6 +485,7 @@ function filtered(ignore){
     if(st.onlyNew && !j._new) return false;
     if(words.length && !words.every(function(w){return j._hay.indexOf(w)>=0;})) return false;
     if(ignore!=="skills" && st.skills.length && !st.skills.some(function(s){return j._skills.has(s);})) return false;
+    if(ignore!=="modes" && st.modes.length && !st.modes.some(function(m){return modeOf(j, m);})) return false;
     if(ignore!=="levels" && st.levels.length && st.levels.indexOf(j.level||"Not stated")<0) return false;
     if(ignore!=="age" && st.age && j._ageDays > st.age) return false;
     if(ignore!=="sources" && st.sources.length && !st.sources.some(function(s){return j._sources.indexOf(s)>=0;})) return false;
@@ -326,7 +517,9 @@ function render(){
 
   chipGroup(document.getElementById("myskills"), SKILLS.map(function(s){return [s,s];}), me, "skills");
   chipGroup(document.getElementById("mylevels"), ["L1","L2","L3"].map(function(s){return [s,s];}), me, "levels");
-  var fs = filtered("skills"), fl = filtered("levels"), fsrc = filtered("sources");
+  var fs = filtered("skills"), fl = filtered("levels"), fsrc = filtered("sources"), fm = filtered("modes");
+  if(!st.modes) st.modes = [];
+  chipGroup(document.getElementById("modes"), MODES.map(function(s){return [s,s];}), st, "modes", function(v){return fm.filter(function(j){return modeOf(j, v);}).length;});
   chipGroup(document.getElementById("skills"), SKILLS.map(function(s){return [s,s];}), st, "skills", function(v){return fs.filter(function(j){return j._skills.has(v);}).length;});
   chipGroup(document.getElementById("levels"), ["L1","L2","L3","Not stated"].map(function(s){return [s,s];}), st, "levels", function(v){return fl.filter(function(j){return (j.level||"Not stated")===v;}).length;});
   chipGroup(document.getElementById("ages"), AGES.map(function(a){return [a[0],a[1]];}), st, "age", null, true);
@@ -366,6 +559,8 @@ function card(j){
     (j.level?'<span class="badge b-lvl">'+esc(j.level)+'</span>':"")+(m==="applied"?'<span class="badge b-applied">APPLIED</span>':"")+
     (j.closed?'<span class="badge b-closed">MAY BE CLOSED</span>':"")+'</h2>'+
     '<div class="meta"><span>'+esc(j.company||"Company not shown")+'</span><span>'+esc(j.location)+'</span>'+
+    (j.work_mode?'<span><b>'+esc(j.work_mode)+'</b></span>':"")+
+    (j.wfh_start?'<span class="wfh" title="From the job text">WFH at start: "'+esc(j.wfh_start)+'"</span>':"")+
     (j.experience?'<span>'+esc(j.experience)+'</span>':"")+
     (j.applicants!=null?'<span>'+j.applicants+' applicants</span>':"")+
     '<span>'+(j.posted?"posted "+ago(j.posted):"found "+ago((j.first_seen||"").slice(0,10)))+'</span></div>'+
@@ -379,7 +574,7 @@ function card(j){
 }
 
 function reset(){
-  Object.assign(st,{q:"",skills:[],levels:[],age:0,sources:[],onlyNew:false,hideDone:true,onlyApplied:false,hideClosed:true});
+  Object.assign(st,{q:"",skills:[],levels:[],modes:[],age:0,sources:[],onlyNew:false,hideDone:true,onlyApplied:false,hideClosed:true});
   q.value=""; ["onlyNew","hideDone","onlyApplied","hideClosed"].forEach(function(k){document.getElementById(k).checked=st[k];}); render();
 }
 
@@ -453,6 +648,89 @@ if(ex.length){
     ex.map(function(x){return '<tr><td>'+esc(x.title)+'</td><td>'+esc(x.reason)+'</td></tr>';}).join("")+'</table></details>';
 }
 render();
+
+// ---------------- Interview prep: real experiences + search links + notes
+var P = window.PREP_DATA || {posts:[]};
+var KIND_LABEL = {experience:"EXPERIENCE", questions:"QUESTIONS", expert:"EXPERT", practice:"PRACTICE"};
+var KIND_NAMES = [["All",""],["Interview experiences","experience"],["Question lists","questions"],["Expert advice","expert"],["Practice","practice"]];
+var PTOPICS = ["SOC","Sentinel","KQL","Splunk","QRadar","EDR/XDR","CrowdStrike","SOAR","Automation","Firewall/Admin","Threat Hunting","Incident Response","Threat Intel","VAPT"];
+var ps = Object.assign({kind:"experience", topics:[]}, store.get("prep", {}));
+var pshown = 25;
+function prepList(ignore){
+  return P.posts.filter(function(p){
+    if(ignore!=="kind" && ps.kind && p.kind!==ps.kind) return false;
+    if(ignore!=="topics" && ps.topics.length && !ps.topics.some(function(t){return (p.topics||[]).indexOf(t)>=0;})) return false;
+    return true;
+  });
+}
+function renderPrep(){
+  store.set("prep", ps);
+  var lk = prepList("kind"), lt = prepList("topics");
+  chipGroup(document.getElementById("pkinds"), KIND_NAMES, ps, "kind", function(v){return lk.filter(function(p){return !v || p.kind===v;}).length;}, false);
+  document.querySelectorAll("#pkinds .chip").forEach(function(c){ var on = c.dataset.v===ps.kind; c.classList.toggle("on", on); c.setAttribute("aria-pressed", on); });
+  document.getElementById("pkinds").onclick = function(e){ var ch=e.target.closest(".chip"); if(!ch) return; ps.kind=ch.dataset.v; pshown=25; renderPrep(); };
+  chipGroup(document.getElementById("ptopics"), PTOPICS.map(function(t){return [t,t];}), ps, "topics", function(v){return lt.filter(function(p){return (p.topics||[]).indexOf(v)>=0;}).length;});
+  document.getElementById("ptopics").onclick = function(e){ var ch=e.target.closest(".chip"); if(!ch) return; var v=ch.dataset.v;
+    ps.topics = ps.topics.indexOf(v)>=0 ? ps.topics.filter(function(x){return x!==v;}) : ps.topics.concat([v]); pshown=25; renderPrep(); };
+  var list = prepList();
+  document.getElementById("posts").innerHTML = list.length ? list.slice(0,pshown).map(function(p){
+    var bits = [p.author, p.date ? p.date : "", p.source, p.region && p.region!=="Global" ? p.region : "", p.company].filter(Boolean).map(esc).join(" &middot; ");
+    return '<div class="post"><span class="kind k-'+esc(p.kind)+'">'+(KIND_LABEL[p.kind]||"")+'</span><div><a href="'+esc(p.url)+'" target="_blank" rel="noopener">'+esc(p.title)+'</a>'+
+      '<div class="pmeta">'+bits+((p.topics||[]).length?' &middot; '+p.topics.map(esc).join(", "):"")+'</div>'+
+      (p.summary?'<div class="psum">'+esc(p.summary.length>200?p.summary.slice(0,200)+"...":p.summary)+'</div>':"")+'</div></div>';
+  }).join("") : '<p class="note">Nothing here yet for this filter. New posts arrive every 6 hours; try another topic or "All".</p>';
+  document.getElementById("pmore").hidden = list.length <= pshown;
+  var lr = P.lastRun || {};
+  document.getElementById("prep-sub").textContent = P.posts.length+" posts ("+P.posts.filter(function(p){return p.kind==="experience";}).length+
+    " interview experiences). Updated every 6 hours"+(lr.new!=null?"; "+lr.new+" new in the last run":"")+". Click to read on the original site.";
+}
+document.getElementById("pmore").onclick = function(){ pshown += 25; renderPrep(); };
+
+function enc(s){ return encodeURIComponent(s); }
+function gd(k){ var slug=k.toLowerCase().replace(/[^a-z0-9]+/g,"-"); return "https://www.glassdoor.com/Interview/"+slug+"-interview-questions-SRCH_KO0,"+k.length+".htm"; }
+var SEARCH_ROLES = [["SOC analyst","SOC analyst"],["Microsoft Sentinel","Sentinel"],["Splunk","Splunk"],["QRadar","QRadar"],["CrowdStrike / EDR","CrowdStrike EDR"],
+  ["SOAR / automation","SOAR security automation"],["Threat hunting","threat hunting"],["Incident response","incident response"],["Security administrator","security administrator firewall"]];
+document.getElementById("searchmore").innerHTML = SEARCH_ROLES.map(function(r){
+  var q = r[1];
+  return '<div><b style="font-size:14px">'+esc(r[0])+'</b><div class="links" style="margin-top:4px">'+
+    '<a href="https://www.linkedin.com/search/results/content/?keywords='+enc(q+" interview experience")+'" target="_blank" rel="noopener">LinkedIn posts</a>'+
+    '<a href="'+gd(r[0].split(" /")[0])+'" target="_blank" rel="noopener">Glassdoor</a>'+
+    '<a href="https://www.reddit.com/search/?q='+enc(q+" interview")+'" target="_blank" rel="noopener">Reddit</a>'+
+    '<a href="https://www.youtube.com/results?search_query='+enc(q+" interview experience")+'" target="_blank" rel="noopener">YouTube</a>'+
+    '<a href="https://www.google.com/search?q='+enc(q+" interview experience site:ambitionbox.com")+'" target="_blank" rel="noopener">AmbitionBox</a>'+
+    '</div></div>';
+}).join("");
+
+function renderCompanies(){
+  var applied = D.jobs.filter(function(j){ return marks[j.id]==="applied"; });
+  document.getElementById("colinks").innerHTML = applied.length ? applied.slice(0,20).map(function(j){
+    var co = j.company||"";
+    return '<div style="margin-bottom:8px"><b style="font-size:14px;color:var(--ink)">'+esc(co)+'</b> &middot; '+esc(j.title)+'<div class="links" style="margin-top:4px">'+
+      '<a href="https://www.glassdoor.com/Search/results.htm?keyword='+enc(co)+'" target="_blank" rel="noopener">Glassdoor</a>'+
+      '<a href="https://www.google.com/search?q='+enc(co+" interview experience site:ambitionbox.com")+'" target="_blank" rel="noopener">AmbitionBox</a>'+
+      '<a href="https://www.reddit.com/search/?q='+enc(co+" interview")+'" target="_blank" rel="noopener">Reddit</a>'+
+      '<a href="https://www.linkedin.com/search/results/content/?keywords='+enc(co+" interview experience")+'" target="_blank" rel="noopener">LinkedIn</a></div></div>';
+  }).join("") : 'Mark a job "I applied" on the Jobs tab and its company\'s review links appear here.';
+}
+
+var notes = store.get("notes", []);
+function renderNotes(){
+  document.getElementById("notes").innerHTML = notes.map(function(n,i){
+    return '<div class="mynote"><b style="font-size:14px">'+esc(n.co)+(n.role?" &middot; "+esc(n.role):"")+'</b><span class="pmeta">'+esc(n.round)+(n.date?" &middot; "+esc(n.date):"")+'</span>'+
+      '<span style="font-size:14px;white-space:pre-wrap">'+esc(n.text)+'</span><button type="button" data-del="'+i+'">Delete</button></div>';
+  }).join("");
+}
+document.getElementById("nform").addEventListener("submit", function(e){
+  e.preventDefault();
+  notes.unshift({co:document.getElementById("n-co").value.trim(), role:document.getElementById("n-role").value.trim(),
+    date:document.getElementById("n-date").value, round:document.getElementById("n-round").value, text:document.getElementById("n-text").value.trim()});
+  store.set("notes", notes); e.target.reset(); renderNotes();
+});
+document.getElementById("notes").addEventListener("click", function(e){
+  var b = e.target.closest("[data-del]"); if(!b) return; notes.splice(+b.dataset.del,1); store.set("notes", notes); renderNotes();
+});
+renderPrep(); renderCompanies(); renderNotes();
+window.addEventListener("hashchange", renderCompanies);
 })();
 </script>
 </body>
